@@ -19,7 +19,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'template.html',
+      title: 'Frontend Project',
+      template: 'index.html',
     }),
   ],
 };
