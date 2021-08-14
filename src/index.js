@@ -1,6 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import generateForm from './generate-form.js';
-import validator from './validator.js';
+import init from './init.js';
 
-document.body.append(generateForm());
-validator();
+// document.body.append(generateForm());
+init();
