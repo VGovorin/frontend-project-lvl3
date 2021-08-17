@@ -1,9 +1,11 @@
 import * as yup from 'yup';
 import onChange from 'on-change';
-import { setLocale } from 'yup';
 import i18next from 'i18next';
+import _ from 'lodash';
 import view from './view.js';
 import ru from './locales/ru.js';
+import getData from './getData.js';
+import parser from './parser.js';
 
 export default () => {
   const newInstance = i18next.createInstance();
@@ -15,9 +17,9 @@ export default () => {
     },
   });
 
-  setLocale({
+  yup.setLocale({
     mixed: {
-      notOneOf: newInstance.t('errors.invalidUrl'),
+      notOneOf: newInstance.t('errors.repetingUrls'),
     },
     string: {
       url: newInstance.t('errors.invalidUrl'),
@@ -28,12 +30,16 @@ export default () => {
     rssForm: {
       uiState: [],
       errors: [],
+      rssData: {
+        feeds: [],
+        posts: [],
+      },
       urls: [],
       state: 'valid',
     },
   };
 
-  const watchedState = onChange(state, view);
+  const watchedState = onChange(state, view(newInstance));
 
   const validate = (value) => {
     const schema = yup.object().shape({
@@ -63,8 +69,27 @@ export default () => {
     } else {
       form.reset();
       input.focus();
+      const id = _.uniqueId();
       watchedState.rssForm.errors = [];
-      watchedState.rssForm.urls.push({ url: formUrl });
+      watchedState.rssForm.urls.push({ url: formUrl, id });
+      getData(formUrl)
+        .then((response) => {
+          const { contents } = response.data;
+          const data = parser(contents);
+          const { titleFeeds, descriptionFeeds } = data;
+          const { posts } = data;
+          const listPostById = posts.map((post) => {
+            const { link, title } = post;
+            return { id, link, title };
+          });
+          const newListPosts = watchedState.rssForm.rssData.posts.concat(listPostById);
+          watchedState.rssForm.rssData.posts = newListPosts;
+          watchedState.rssForm.rssData.feeds.push({
+            id,
+            titleFeeds,
+            descriptionFeeds,
+          });
+        });
     }
   });
 };
