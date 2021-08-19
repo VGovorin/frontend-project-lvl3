@@ -79,10 +79,7 @@ export default () => {
           const data = parser(contents);
           const { titleFeeds, descriptionFeeds } = data;
           const { posts } = data;
-          const listPostById = posts.map((post) => {
-            const { link, title } = post;
-            return { id, link, title };
-          });
+          const listPostById = posts.map(({ link, title }) => ({ id, link, title }));
           const newListPosts = listPostById.concat(watchedState.rssForm.rssData.posts);
           watchedState.rssForm.rssData.posts = newListPosts;
           watchedState.rssForm.rssData.feeds.unshift({

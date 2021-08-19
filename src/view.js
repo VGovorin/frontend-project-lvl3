@@ -14,6 +14,7 @@ const watchedState = (newInstance) => (path, value) => {
   if (path === 'rssForm.rssData.feeds') {
     const feedsContainer = document.querySelector('.feeds');
     feedsContainer.innerHTML = '';
+
     const container = document.createElement('div');
     container.classList.add('card');
     container.classList.add('border-0');
@@ -62,33 +63,40 @@ const watchedState = (newInstance) => (path, value) => {
   if (path === 'rssForm.rssData.posts') {
     const postsContainer = document.querySelector('.posts');
     postsContainer.innerHTML = '';
+
     const containerPosts = document.createElement('div');
     containerPosts.classList.add('card');
     containerPosts.classList.add('border-0');
     const cardBody = document.createElement('div');
     cardBody.classList.add('card-body');
+
     const h2 = document.createElement('h2');
     h2.classList.add('card-title');
     h2.classList.add('h4');
     h2.textContent = newInstance.t('posts');
+
     cardBody.append(h2);
     const ulEl = document.createElement('ul');
     ulEl.classList.add('list-group');
     ulEl.classList.add('rounded-0');
+
     value.forEach((post) => {
       const { title, link } = post;
       const liEl = document.createElement('li');
+
       liEl.classList.add('list-group-item');
       liEl.classList.add('justify-content-between');
       liEl.classList.add('align-items-start');
       liEl.classList.add('border-0');
       liEl.classList.add('border-end-0');
+
       const aEl = document.createElement('a');
       aEl.href = link;
       aEl.textContent = title;
       liEl.append(aEl);
       ulEl.append(aEl);
     });
+
     postsContainer.append(cardBody);
     containerPosts.append(ulEl);
     postsContainer.append(containerPosts);
