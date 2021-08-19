@@ -6,6 +6,7 @@ import view from './view.js';
 import ru from './locales/ru.js';
 import getData from './getData.js';
 import parser from './parser.js';
+import updatePosts from './updatePosts.js';
 
 export default () => {
   const newInstance = i18next.createInstance();
@@ -51,8 +52,8 @@ export default () => {
     try {
       schema.validateSync(value);
       return null;
-    } catch (e) {
-      return e.message;
+    } catch (error) {
+      return error.message;
     }
   };
 
@@ -82,13 +83,14 @@ export default () => {
             const { link, title } = post;
             return { id, link, title };
           });
-          const newListPosts = watchedState.rssForm.rssData.posts.concat(listPostById);
+          const newListPosts = listPostById.concat(watchedState.rssForm.rssData.posts);
           watchedState.rssForm.rssData.posts = newListPosts;
-          watchedState.rssForm.rssData.feeds.push({
+          watchedState.rssForm.rssData.feeds.unshift({
             id,
             titleFeeds,
             descriptionFeeds,
           });
+          updatePosts(watchedState);
         });
     }
   });

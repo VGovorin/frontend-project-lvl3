@@ -83,11 +83,11 @@ const watchedState = (newInstance) => (path, value) => {
       liEl.classList.add('align-items-start');
       liEl.classList.add('border-0');
       liEl.classList.add('border-end-0');
-      const href = document.createElement('a');
-      href.href = link;
-      href.textContent = title;
-      liEl.append(href);
-      ulEl.append(href);
+      const aEl = document.createElement('a');
+      aEl.href = link;
+      aEl.textContent = title;
+      liEl.append(aEl);
+      ulEl.append(aEl);
     });
     postsContainer.append(cardBody);
     containerPosts.append(ulEl);
