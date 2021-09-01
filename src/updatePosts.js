@@ -13,7 +13,9 @@ export default (watchedState) => {
           const parsed = parser(response.data.contents);
           const newPosts = parsed.posts.filter((post) => !currentLinkById.includes(post.link));
           if (!_.isEmpty(newPosts)) {
-            const newPostsById = newPosts.map(({ link, title }) => ({ id, link, title }));
+            const newPostsById = newPosts.map(({ link, title, description }) => ({
+              id, link, title, description,
+            }));
             newPostsById.forEach((item) => watchedState.rssForm.rssData.posts.unshift(item));
           }
         })

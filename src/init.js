@@ -29,7 +29,7 @@ export default () => {
 
   const state = {
     rssForm: {
-      uiState: [],
+      processState: 'filling',
       errors: [],
       rssData: {
         feeds: [],
@@ -58,13 +58,15 @@ export default () => {
   };
 
   const form = document.querySelector('form');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
+  form.addEventListener('submit', (eventSubmit) => {
+    eventSubmit.preventDefault();
     const input = document.querySelector('#url-input');
-    const formData = new FormData(e.target);
+    watchedState.rssForm.processState = 'sending';
+    const formData = new FormData(eventSubmit.target);
     const formUrl = formData.get('url').trim();
     const error = validate({ url: formUrl });
     if (error) {
+      watchedState.rssForm.processState = 'filling';
       watchedState.rssForm.state = 'invalid';
       watchedState.rssForm.errors = error;
     } else {
@@ -72,22 +74,32 @@ export default () => {
       input.focus();
       const id = _.uniqueId();
       watchedState.rssForm.errors = [];
-      watchedState.rssForm.urls.push({ url: formUrl, id });
       getData(formUrl)
         .then((response) => {
           const { contents } = response.data;
-          const data = parser(contents);
-          const { titleFeeds, descriptionFeeds } = data;
-          const { posts } = data;
-          const listPostById = posts.map(({ link, title }) => ({ id, link, title }));
-          const newListPosts = listPostById.concat(watchedState.rssForm.rssData.posts);
-          watchedState.rssForm.rssData.posts = newListPosts;
-          watchedState.rssForm.rssData.feeds.unshift({
-            id,
-            titleFeeds,
-            descriptionFeeds,
-          });
-          updatePosts(watchedState);
+          try {
+            const data = parser(contents);
+            watchedState.rssForm.urls.push({ url: formUrl, id });
+            const { titleFeeds, descriptionFeeds } = data;
+            const { posts } = data;
+            const listPostById = posts.map(({ link, title, description }) => ({
+              id, link, title, description,
+            }));
+            const newListPosts = listPostById.concat(watchedState.rssForm.rssData.posts);
+            watchedState.rssForm.rssData.posts = newListPosts;
+            watchedState.rssForm.rssData.feeds.unshift({
+              id,
+              titleFeeds,
+              descriptionFeeds,
+            });
+            watchedState.rssForm.processState = 'filling';
+            watchedState.rssForm.state = 'valid';
+            updatePosts(watchedState);
+          } catch {
+            watchedState.rssForm.state = 'invalid';
+            watchedState.rssForm.errors = newInstance.t('urlNotContainValidRss');
+            watchedState.rssForm.processState = 'filling';
+          }
         });
     }
   });

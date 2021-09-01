@@ -10,7 +10,8 @@ export default (response) => {
   const posts = Array.from(items).map((item) => {
     const link = item.querySelector('link').textContent;
     const title = item.querySelector('title').textContent;
-    return { title, link };
+    const description = item.querySelector('description').textContent;
+    return { title, link, description };
   });
   return { titleFeeds, descriptionFeeds, posts };
 };

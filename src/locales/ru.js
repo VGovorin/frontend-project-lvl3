@@ -6,5 +6,8 @@ export default {
     },
     posts: 'Посты',
     feeds: 'Фиды',
+    buutonsViewing: 'Просмотр',
+    success: 'RSS успешно загружен',
+    urlNotContainValidRss: 'Ресурс не содержит валидный RSS',
   },
 };

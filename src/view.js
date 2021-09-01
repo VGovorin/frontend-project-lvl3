@@ -1,17 +1,32 @@
-const watchedState = (newInstance) => (path, value) => {
+import buildModal from './buildModal.js';
+
+const view = (newInstance) => (path, value) => {
   const errorMessage = document.querySelector('#error-message');
   const input = document.querySelector('#url-input');
-  errorMessage.textContent = '';
+  const submitButton = document.querySelector('[aria-label=add]');
+  if (value === 'sending') {
+    input.classList.remove('is-invalid');
+    submitButton.disabled = true;
+  }
+  if (value === 'filling') {
+    submitButton.disabled = false;
+  }
   if (value === 'invalid') {
     input.classList.add('is-invalid');
   }
-  if (path === 'rssForm.urls') {
+  if (value === 'valid') {
     input.classList.remove('is-invalid');
   }
   if (path === 'rssForm.errors') {
+    errorMessage.classList.remove('text-success');
+    errorMessage.classList.add('text-danger');
     errorMessage.textContent = value;
   }
   if (path === 'rssForm.rssData.feeds') {
+    errorMessage.classList.remove('text-danger');
+    errorMessage.classList.add('text-success');
+    errorMessage.textContent = newInstance.t('success');
+
     const feedsContainer = document.querySelector('.feeds');
     feedsContainer.innerHTML = '';
 
@@ -78,23 +93,48 @@ const watchedState = (newInstance) => (path, value) => {
     cardBody.append(h2);
     const ulEl = document.createElement('ul');
     ulEl.classList.add('list-group');
+    ulEl.classList.add('border-0');
     ulEl.classList.add('rounded-0');
 
     value.forEach((post) => {
-      const { title, link } = post;
+      const {
+        title, link, id, description,
+      } = post;
       const liEl = document.createElement('li');
+      const button = document.createElement('button');
 
       liEl.classList.add('list-group-item');
+      liEl.classList.add('d-flex');
       liEl.classList.add('justify-content-between');
       liEl.classList.add('align-items-start');
       liEl.classList.add('border-0');
       liEl.classList.add('border-end-0');
 
+      button.setAttribute('type', 'button');
+      button.setAttribute('data-bs-toggle', 'modal');
+      button.setAttribute('data-bs-target', '#modal');
+      button.classList.add('col-auto');
+      button.classList.add('btn');
+      button.classList.add('btn-outline-primary');
+      button.classList.add('btn-sm');
+      button.setAttribute('data-id', `${id}`);
+      button.textContent = newInstance.t('buutonsViewing');
+
       const aEl = document.createElement('a');
+      aEl.classList.add('fw-bold');
+      aEl.setAttribute('data-id', `${id}`);
       aEl.href = link;
       aEl.textContent = title;
+
+      button.addEventListener('click', () => {
+        aEl.classList.remove('fw-bold');
+        aEl.classList.add('fw-normal');
+        buildModal(title, link, description);
+      });
+
       liEl.append(aEl);
-      ulEl.append(aEl);
+      liEl.append(button);
+      ulEl.append(liEl);
     });
 
     postsContainer.append(cardBody);
@@ -103,4 +143,4 @@ const watchedState = (newInstance) => (path, value) => {
   }
 };
 
-export default watchedState;
+export default view;
