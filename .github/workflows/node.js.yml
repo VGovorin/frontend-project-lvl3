@@ -26,9 +26,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-      run: |
-        npm ci
-        make build
-      env:
+    - run: npm ci
+    - run: 
+    env:
         CI: true
     - run: make lint
