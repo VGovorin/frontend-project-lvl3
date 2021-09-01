@@ -1,4 +1,4 @@
-// import { Modal } from 'bootstrap';
+import { Modal } from 'bootstrap';
 
 export default (title, link, description) => {
   const modalTitle = document.getElementById('ModalLabel');
