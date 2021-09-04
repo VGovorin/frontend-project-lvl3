@@ -7,4 +7,5 @@ export default (title, link, description) => {
   modalBody.textContent = description;
   const aEl = document.querySelector('#fullArticle');
   aEl.href = link;
+  Modal.getInstance(modalTitle);
 };
