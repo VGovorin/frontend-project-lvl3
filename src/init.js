@@ -7,6 +7,7 @@ import ru from './locales/ru.js';
 import getData from './getData.js';
 import parser from './parser.js';
 import updatePosts from './updatePosts.js';
+import axios from 'axios';
 
 export default () => {
   const newInstance = i18next.createInstance();
@@ -100,6 +101,14 @@ export default () => {
             watchedState.rssForm.errors = newInstance.t('urlNotContainValidRss');
             watchedState.rssForm.processState = 'filling';
           }
+        })
+        .catch((e) => {
+          if (e.networkError) {
+            watchedState.rssForm.errors = newInstance.t('errors.networkError');
+          }
+        })
+        .finally(() => {
+          watchedState.rssForm.processState = 'filling';
         });
     }
   });

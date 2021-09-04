@@ -7,6 +7,8 @@ const proxy = (url) => {
 };
 
 export default (url) => axios.get(proxy(url))
-  .catch((e) => {
-    throw new Error(e);
+  .catch(() => {
+    const error = new Error();
+    error.networkError = true;
+    throw error;
   });
