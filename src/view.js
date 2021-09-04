@@ -6,10 +6,12 @@ const view = (newInstance) => (path, value) => {
   const submitButton = document.querySelector('[aria-label=add]');
   if (value === 'sending') {
     input.classList.remove('is-invalid');
+    input.readOnly = true;
     submitButton.disabled = true;
   }
   if (value === 'filling') {
     submitButton.disabled = false;
+    input.readOnly = false;
   }
   if (value === 'invalid') {
     input.classList.add('is-invalid');
