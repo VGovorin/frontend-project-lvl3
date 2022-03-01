@@ -5,4 +5,4 @@
 
 [![Node CI](https://github.com/VGovorin/frontend-project-lvl3/actions/workflows/node.js.yml/badge.svg)](https://github.com/VGovorin/frontend-project-lvl3/actions)
 
-visit site: https://frontend-project-lvl3-bobjpbth6-rss-reader.vercel.app/
+visit site: https://frontend-project-lvl3-rust.vercel.app/
