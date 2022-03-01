@@ -1,5 +1,3 @@
-import { Modal } from 'bootstrap';
-
 export default (title, link, description) => {
   const modalTitle = document.getElementById('ModalLabel');
   modalTitle.textContent = title;
@@ -7,5 +5,4 @@ export default (title, link, description) => {
   modalBody.textContent = description;
   const aEl = document.querySelector('#fullArticle');
   aEl.href = link;
-  Modal.getInstance(modalTitle);
 };

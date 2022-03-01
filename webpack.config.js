@@ -1,5 +1,3 @@
-// const path = require('path');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
 // eslint-disable-next-line import/no-import-module-exports
 import path, { dirname } from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
